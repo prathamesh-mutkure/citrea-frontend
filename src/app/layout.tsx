@@ -24,14 +24,14 @@ export default function RootLayout({
         <div className="flex h-screen bg-purple-50">
           <Sidebar />
 
-          <div className="flex-1 p-6">
+          <div className="flex-1 p-6 h-screen overflow-scroll">
             {/* Top Bar */}
             <div className="flex flex-col space-y-4">
               {/* {error && (
-            <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )} */}
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )} */}
 
               <div className="flex justify-between items-center mb-8">
                 <WalletConnect />
@@ -46,7 +46,6 @@ export default function RootLayout({
                 </div>
               </div>
             </div>
-
             {children}
           </div>
         </div>

@@ -1,101 +1,80 @@
-import Image from "next/image";
+"use client";
+
+import { Bell, Settings, Wallet } from "lucide-react";
+// import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Sidebar } from "@/components/Sidebar";
+import { WalletConnect } from "@/components/WalletConnect";
+import { useWallet } from "@/lib/hooks/useWallet";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const { isConnected, error, balance, connectWallet } = useWallet();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  return (
+    <div className="flex h-screen bg-purple-50">
+      <Sidebar />
+
+      {/* Main Content */}
+      <div className="flex-1 p-6">
+        {/* Top Bar */}
+        <div className="flex flex-col space-y-4">
+          {/* {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )} */}
+
+          <div className="flex justify-between items-center mb-8">
+            <WalletConnect />
+
+            <div className="flex gap-4">
+              <button className="p-2 hover:bg-purple-100 rounded-full">
+                <Bell size={20} />
+              </button>
+              <button className="p-2 hover:bg-purple-100 rounded-full">
+                <Settings size={20} />
+              </button>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Main Sections */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Assets Section */}
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <h2 className="text-xl font-semibold mb-4">Assets</h2>
+            {!isConnected ? (
+              <div className="text-center py-12">
+                <Wallet className="mx-auto mb-4 text-gray-400" size={48} />
+                <p className="text-gray-600 mb-4">No Wallet Connected</p>
+                <button
+                  onClick={connectWallet}
+                  className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+                >
+                  Connect MetaMask
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="p-4 border rounded-lg">
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">ETH Balance</span>
+                    <span>{balance} ETH</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Activity Section */}
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <h2 className="text-xl font-semibold mb-4">Activity</h2>
+            <div className="text-center py-12 text-gray-600">
+              <p>No activity yet</p>
+              <p className="text-sm mt-2">Your transactions will appear here</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -11,8 +11,8 @@ const menuItems = [
     beta: false,
     href: "/swap",
   },
-  { icon: <RefreshCcw size={20} />, label: "DCA", beta: true, href: "/dca" },
-  { icon: <Repeat size={20} />, label: "DEX", beta: true, href: "/dex" },
+  { icon: <RefreshCcw size={20} />, label: "DCA", beta: false, href: "/dca" },
+  { icon: <Repeat size={20} />, label: "AMM", beta: false, href: "/amm" },
   { icon: <Send size={20} />, label: "Send", href: "/send" },
 ];
 

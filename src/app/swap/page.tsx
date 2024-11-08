@@ -2,7 +2,6 @@
 
 import { Wallet } from "lucide-react";
 import { useWallet } from "@/lib/hooks/useWallet";
-// import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function Home() {
   const { isConnected, error, balance, connectWallet } = useWallet();
@@ -33,15 +32,6 @@ export default function Home() {
             </div>
           </div>
         )}
-      </div>
-
-      {/* Activity Section */}
-      <div className="bg-white p-6 rounded-lg shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">Activity</h2>
-        <div className="text-center py-12 text-gray-600">
-          <p>No activity yet</p>
-          <p className="text-sm mt-2">Your transactions will appear here</p>
-        </div>
       </div>
     </div>
   );

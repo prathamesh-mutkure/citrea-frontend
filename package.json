@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ethersproject/providers": "^5.7.2",
+    "ethers": "^5.7.2",
     "lucide-react": "^0.455.0",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",

@@ -22,8 +22,9 @@ export function Sidebar() {
 
   return (
     <div className="w-64 bg-white p-4 shadow-lg">
-      <div className="mb-8">
-        <h1 className="text-xl font-bold text-purple-600">Citreous</h1>
+      <div className="mb-8 flex flex-row gap-4 items-center justify-start">
+        <img src="/logo.svg" alt="CitriFi" className="w-12 h-12" />
+        <h1 className="text-xl font-bold text-purple-600">CitriFi</h1>
       </div>
 
       <nav>

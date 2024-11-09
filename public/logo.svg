@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Background circle with gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700"/>
+      <stop offset="100%" style="stop-color:#FFA500"/>
+    </linearGradient>
+    
+    <!-- Citrus segment pattern -->
+    <pattern id="citrusPattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M0 20 Q20 0, 40 20 Q20 40, 0 20" 
+            fill="none" 
+            stroke="#FFE5B4" 
+            stroke-width="1" 
+            opacity="0.3"/>
+    </pattern>
+  </defs>
+
+  <!-- Main circular background -->
+  <circle cx="100" cy="100" r="90" fill="url(#bgGradient)"/>
+  
+  <!-- Citrus pattern overlay -->
+  <circle cx="100" cy="100" r="90" fill="url(#citrusPattern)"/>
+  
+  <!-- Outer ring representing citrus segments -->
+  <path d="M100 20
+           a80 80 0 0 1 0 160
+           a80 80 0 0 1 0 -160"
+        fill="none"
+        stroke="#FFFFFF"
+        stroke-width="4"
+        opacity="0.6"
+        stroke-dasharray="25 8"/>
+  
+  <!-- Inner circle for finance symbol -->
+  <circle cx="100" cy="100" r="60" 
+          fill="#FFFFFF" 
+          opacity="0.15"/>
+  
+  <!-- Stylized C for Citrea -->
+  <path d="M130 70 
+           A40 40 0 1 0 130 130
+           A30 30 0 1 1 130 90
+           M120 85
+           A20 20 0 1 1 120 115"
+        fill="none"
+        stroke="#1a5f7a"
+        stroke-width="8"
+        stroke-linecap="round"/>
+
+  <!-- Bitcoin symbol overlay -->
+  <g transform="translate(85, 75) scale(0.8)">
+    <path d="M15 20 h25 a15 15 0 0 1 0 30 h-25
+             M15 50 h30 a15 15 0 0 1 0 30 h-30
+             M25 10 v90
+             M40 10 v90"
+          fill="none"
+          stroke="#1a5f7a"
+          stroke-width="8"
+          stroke-linecap="round"/>
+  </g>
+
+  <!-- Citrus leaf -->
+  <path d="M150 40 Q160 35, 165 45 Q170 55, 160 60 Q150 65, 145 55 Q140 45, 150 40"
+        fill="#4CAF50"/>
+  
+  <!-- Small dots representing citrus oils -->
+  <circle cx="60" cy="60" r="2" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="140" cy="140" r="2" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="50" cy="120" r="2" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="130" cy="50" r="2" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="90" cy="150" r="2" fill="#FFFFFF" opacity="0.8"/>
+  
+  <!-- Circular chart element representing financial data -->
+  <path d="M100 40 A60 60 0 0 1 155 100"
+        fill="none"
+        stroke="#1a5f7a"
+        stroke-width="6"
+        stroke-linecap="round"/>
+</svg>

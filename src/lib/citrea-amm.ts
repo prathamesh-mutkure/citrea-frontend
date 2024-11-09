@@ -231,14 +231,16 @@ export class CitreaAMMWrapper {
 }
 
 // Usage Example:
-const initializeAMM = async () => {
+export const initializeAMM = async () => {
   // With MetaMask
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  console.log("Initializing AMM...", window.ethereum ? "MetaMask" : "Provider");
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum!);
   await provider.send("eth_requestAccounts", []); // Request account access
 
   const ammWrapper = new CitreaAMMWrapper({
     provider,
-    ammAddress: "YOUR_AMM_CONTRACT_ADDRESS",
+    ammAddress: "0x2D941c0d6226B2c0Bde80869956413739aB070de",
     usdcAddress: "0xb669dC8cC6D044307Ba45366C0c836eC3c7e31AA",
   });
 

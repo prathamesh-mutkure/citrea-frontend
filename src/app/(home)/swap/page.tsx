@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ArrowUpDown, Info, Settings } from "lucide-react";
+import { initializeAMM } from "@/lib/citrea-amm";
 // import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const stablecoins = [
@@ -61,6 +62,34 @@ const SwapPage = () => {
       ))}
     </select>
   );
+
+  async function load() {
+    const amm = await initializeAMM();
+
+    // Get reserves
+    try {
+      const reserves = await amm.getReserves();
+      console.log("Pool Reserves:", reserves);
+    } catch (error) {
+      console.error("Error getting reserves:", error);
+    }
+
+    // Add liquidity
+    // const addLiquidityResult = await amm.addLiquidity('0.1', '100');
+    // if (addLiquidityResult.success) {
+    //     console.log('Liquidity added successfully!');
+    // }
+
+    // Swap CBTC for USDC
+    // const swapResult = await amm.swapCBTCForUSDC('0.01', '95');
+    // if (swapResult.success) {
+    //     console.log('Swap completed successfully!');
+    // }
+  }
+
+  useEffect(() => {
+    load();
+  }, []);
 
   return (
     <div className="p-6 max-w-4xl mx-auto">

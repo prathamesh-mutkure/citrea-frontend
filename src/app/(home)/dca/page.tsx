@@ -8,6 +8,7 @@ import {
   Trash2,
   AlertCircle,
 } from "lucide-react";
+import DCAListPage from "@/components/DCAList";
 
 const tokens = [
   { symbol: "ETH", name: "Ethereum", price: 4200.0, icon: "⟠" },
@@ -33,26 +34,16 @@ const DCAPage = () => {
 
   // Sample DCA positions
   const [dcaPositions, setDcaPositions] = useState([
-    // {
-    //   id: 1,
-    //   from: "USDC",
-    //   to: "ETH",
-    //   amount: "100",
-    //   frequency: "weekly",
-    //   nextExecution: "2024-11-15",
-    //   totalInvested: "1200",
-    //   active: true,
-    // },
-    // {
-    //   id: 2,
-    //   from: "USDT",
-    //   to: "BTC",
-    //   amount: "500",
-    //   frequency: "monthly",
-    //   nextExecution: "2024-12-01",
-    //   totalInvested: "2000",
-    //   active: false,
-    // },
+    {
+      id: 1,
+      from: "USDC",
+      to: "ETH",
+      amount: "100",
+      frequency: "weekly",
+      nextExecution: "2024-11-15",
+      totalInvested: "1200",
+      active: true,
+    },
   ]);
 
   const handleCreateDCA = () => {
@@ -296,6 +287,8 @@ const DCAPage = () => {
           )}
         </div>
       )}
+
+      {activeTab === "manage" && <DCAListPage />}
     </div>
   );
 };

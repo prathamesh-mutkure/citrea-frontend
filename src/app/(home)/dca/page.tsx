@@ -33,26 +33,26 @@ const DCAPage = () => {
 
   // Sample DCA positions
   const [dcaPositions, setDcaPositions] = useState([
-    {
-      id: 1,
-      from: "USDC",
-      to: "ETH",
-      amount: "100",
-      frequency: "weekly",
-      nextExecution: "2024-11-15",
-      totalInvested: "1200",
-      active: true,
-    },
-    {
-      id: 2,
-      from: "USDT",
-      to: "BTC",
-      amount: "500",
-      frequency: "monthly",
-      nextExecution: "2024-12-01",
-      totalInvested: "2000",
-      active: false,
-    },
+    // {
+    //   id: 1,
+    //   from: "USDC",
+    //   to: "ETH",
+    //   amount: "100",
+    //   frequency: "weekly",
+    //   nextExecution: "2024-11-15",
+    //   totalInvested: "1200",
+    //   active: true,
+    // },
+    // {
+    //   id: 2,
+    //   from: "USDT",
+    //   to: "BTC",
+    //   amount: "500",
+    //   frequency: "monthly",
+    //   nextExecution: "2024-12-01",
+    //   totalInvested: "2000",
+    //   active: false,
+    // },
   ]);
 
   const handleCreateDCA = () => {
@@ -99,10 +99,13 @@ const DCAPage = () => {
               ? "bg-purple-600 text-white"
               : "bg-white text-gray-600 hover:bg-gray-50"
           }`}
-          onClick={() => setActiveTab("create")}
+          onClick={() => {
+            setActiveTab("create");
+          }}
         >
           Create DCA Position
         </button>
+
         <button
           className={`px-4 py-2 rounded-lg ${
             activeTab === "manage"

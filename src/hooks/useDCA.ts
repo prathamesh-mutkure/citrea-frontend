@@ -97,25 +97,29 @@ export function useDCA(address: string | undefined) {
   ) => {
     if (!window.ethereum) throw new Error("No wallet connected");
 
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
 
-    const factoryContract = new ethers.Contract(
-      DCA_FACTORY_ADDRESS,
-      DCA_FACTORY_ABI,
-      signer
-    );
+      const factoryContract = new ethers.Contract(
+        DCA_FACTORY_ADDRESS,
+        DCA_FACTORY_ABI,
+        signer
+      );
 
-    const tx = await factoryContract.createDCA(
-      router,
-      stablecoin,
-      dcaAmount,
-      dcaInterval,
-      slippageTolerance
-    );
+      const tx = await factoryContract.createDCA(
+        router,
+        stablecoin,
+        dcaAmount,
+        dcaInterval,
+        slippageTolerance
+      );
 
-    await tx.wait();
-    await loadDCAList();
+      await tx.wait();
+      await loadDCAList();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   // Execute DCA for a specific strategy

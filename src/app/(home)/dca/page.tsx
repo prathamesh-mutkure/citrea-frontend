@@ -9,10 +9,12 @@ import {
   AlertCircle,
 } from "lucide-react";
 import DCAListPage from "@/components/DCAList";
+import { useDCA } from "@/hooks/useDCA";
+import { UniswapV2Router02, USDC_CONTRACT_ADDRESS } from "@/lib/constant";
+import { ethers } from "ethers";
 
 const tokens = [
-  { symbol: "ETH", name: "Ethereum", price: 4200.0, icon: "⟠" },
-  { symbol: "BTC", name: "Bitcoin", price: 65000.0, icon: "₿" },
+  { symbol: "cBTC", name: "cBitcoin", price: 65000.0, icon: "₿" },
   { symbol: "USDC", name: "USD Coin", price: 1.0, icon: "💵" },
   { symbol: "USDT", name: "Tether", price: 1.0, icon: "💵" },
 ];
@@ -26,11 +28,12 @@ const frequencies = [
 
 const DCAPage = () => {
   const [activeTab, setActiveTab] = useState("create");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState("10");
   const [fromToken, setFromToken] = useState("USDC");
-  const [toToken, setToToken] = useState("");
-  const [frequency, setFrequency] = useState("");
-  const [isConnected, setIsConnected] = useState(false);
+  const [toToken, setToToken] = useState("cBTC");
+  const [frequency, setFrequency] = useState("daily");
+
+  const { createDCA, refreshList, loading, error } = useDCA();
 
   // Sample DCA positions
   const [dcaPositions, setDcaPositions] = useState([
@@ -49,6 +52,13 @@ const DCAPage = () => {
   const handleCreateDCA = () => {
     // Implementation for creating new DCA position
     console.log("Creating DCA position...");
+    createDCA(
+      UniswapV2Router02,
+      USDC_CONTRACT_ADDRESS,
+      BigInt(amount),
+      10n,
+      100n
+    );
   };
 
   const toggleDCA = (id) => {
@@ -197,12 +207,10 @@ const DCAPage = () => {
 
             <button
               onClick={handleCreateDCA}
-              disabled={
-                !isConnected || !amount || !fromToken || !toToken || !frequency
-              }
+              disabled={!amount || !fromToken || !toToken || !frequency}
               className="w-full py-4 bg-purple-600 text-white rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-purple-700 transition-colors"
             >
-              {!isConnected ? "Connect Wallet" : "Create DCA Position"}
+              {"Create DCA Position"}
             </button>
           </div>
         </div>

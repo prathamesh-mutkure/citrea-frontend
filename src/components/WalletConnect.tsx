@@ -17,7 +17,7 @@ export function WalletConnect() {
       {isConnected ? (
         <>
           <span className="text-gray-600 mr-2">Balance:</span>
-          <span className="text-xl font-bold">{balance} ETH</span>
+          <span className="text-xl font-bold">{balance} cBTC</span>
           <span className="ml-4 text-gray-600">{formatAddress(account)}</span>
         </>
       ) : (

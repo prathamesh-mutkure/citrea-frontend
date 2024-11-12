@@ -38,7 +38,8 @@ export function useDCA(address: string | undefined) {
 
       const rawDcaInfos = await factoryContract.getUserDCAs(address);
 
-      const dcaInfos = rawDcaInfos.map((info: any[]) => ({
+      // Convert the array response to DCAInfo objects
+      const mappedDcaInfos = rawDcaInfos.map((info: any[]) => ({
         dcaContract: info[0],
         owner: info[1],
         stablecoin: info[2],
@@ -49,29 +50,36 @@ export function useDCA(address: string | undefined) {
 
       // Fetch additional details for each DCA strategy
       const enhancedDcaInfos = await Promise.all(
-        dcaInfos.map(async (info: DCAInfo) => {
+        mappedDcaInfos.map(async (info: DCAInfo) => {
           const strategyContract = new ethers.Contract(
             info.dcaContract,
             DCA_STRATEGY_ABI,
             provider
           );
 
-          const lastExecutionTime = await strategyContract.lastExecutionTime();
-          const interval = await strategyContract.dcaInterval();
+          try {
+            const lastExecutionTime =
+              await strategyContract.lastExecutionTime();
+            const interval = await strategyContract.dcaInterval();
 
-          return {
-            ...info,
-            lastExecutionTime,
-            nextExecutionTime: lastExecutionTime + interval,
-          };
+            return {
+              ...info,
+              lastExecutionTime,
+              nextExecutionTime: lastExecutionTime + interval,
+            };
+          } catch (err) {
+            console.error(
+              `Error fetching details for DCA ${info.dcaContract}:`,
+              err
+            );
+            return info; // Return basic info if additional details fetch fails
+          }
         })
       );
 
       setDcaList(enhancedDcaInfos);
       setError(null);
     } catch (err) {
-      console.log(err);
-
       console.error("Error loading DCA list:", err);
       setError("Failed to load DCA strategies");
     } finally {
@@ -114,18 +122,68 @@ export function useDCA(address: string | undefined) {
   const executeDCA = async (dcaAddress: string) => {
     if (!window.ethereum) throw new Error("No wallet connected");
 
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
 
-    const strategyContract = new ethers.Contract(
-      dcaAddress,
-      DCA_STRATEGY_ABI,
-      signer
-    );
+      const strategyContract = new ethers.Contract(
+        dcaAddress,
+        DCA_STRATEGY_ABI,
+        signer
+      );
 
-    const tx = await strategyContract.executeDCA();
-    await tx.wait();
-    await loadDCAList();
+      const tx = await strategyContract.executeDCA();
+      await tx.wait();
+      await loadDCAList();
+    } catch (err: any) {
+      console.error("Error executing DCA:", err);
+      throw new Error(err.reason || "Failed to execute DCA");
+    }
+  };
+
+  // Withdraw ETH from DCA strategy
+  const withdrawETH = async (dcaAddress: string) => {
+    if (!window.ethereum) throw new Error("No wallet connected");
+
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+
+      const strategyContract = new ethers.Contract(
+        dcaAddress,
+        DCA_STRATEGY_ABI,
+        signer
+      );
+
+      const tx = await strategyContract.withdrawETH();
+      await tx.wait();
+    } catch (err: any) {
+      console.error("Error withdrawing ETH:", err);
+      throw new Error(err.reason || "Failed to withdraw ETH");
+    }
+  };
+
+  // Withdraw stablecoin from DCA strategy
+  const withdrawStablecoin = async (dcaAddress: string, amount: bigint) => {
+    if (!window.ethereum) throw new Error("No wallet connected");
+
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+
+      const strategyContract = new ethers.Contract(
+        dcaAddress,
+        DCA_STRATEGY_ABI,
+        signer
+      );
+
+      const tx = await strategyContract.withdrawStablecoin(amount);
+      await tx.wait();
+      await loadDCAList();
+    } catch (err: any) {
+      console.error("Error withdrawing stablecoin:", err);
+      throw new Error(err.reason || "Failed to withdraw stablecoin");
+    }
   };
 
   useEffect(() => {
@@ -138,6 +196,8 @@ export function useDCA(address: string | undefined) {
     error,
     createDCA,
     executeDCA,
+    withdrawETH,
+    withdrawStablecoin,
     refreshList: loadDCAList,
   };
 }

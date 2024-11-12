@@ -12,11 +12,13 @@ import DCAListPage from "@/components/DCAList";
 import { useDCA } from "@/hooks/useDCA";
 import { UniswapV2Router02, USDC_CONTRACT_ADDRESS } from "@/lib/constant";
 import { ethers } from "ethers";
+import { useWallet } from "@/lib/hooks/useWallet";
 
 const tokens = [
   { symbol: "cBTC", name: "cBitcoin", price: 65000.0, icon: "₿" },
   { symbol: "USDC", name: "USD Coin", price: 1.0, icon: "💵" },
   { symbol: "USDT", name: "Tether", price: 1.0, icon: "💵" },
+  { symbol: "DAI", name: "Dai", price: 1.0, icon: "💵" },
 ];
 
 const frequencies = [
@@ -33,7 +35,8 @@ const DCAPage = () => {
   const [toToken, setToToken] = useState("cBTC");
   const [frequency, setFrequency] = useState("daily");
 
-  const { createDCA, refreshList, loading, error } = useDCA();
+  const { account } = useWallet();
+  const { createDCA, refreshList, loading, error } = useDCA(account);
 
   // Sample DCA positions
   const [dcaPositions, setDcaPositions] = useState([
@@ -56,7 +59,7 @@ const DCAPage = () => {
       UniswapV2Router02,
       USDC_CONTRACT_ADDRESS,
       BigInt(amount),
-      10n,
+      1000000n,
       100n
     );
   };

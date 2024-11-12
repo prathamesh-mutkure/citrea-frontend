@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { ethers } from "ethers";
+import { ethers, MaxUint256 } from "ethers";
 import {
   DCA_FACTORY_ABI,
   DCA_FACTORY_ADDRESS,
   DCA_STRATEGY_ABI,
+  ERC20_ABI,
 } from "@/lib/contracts";
 
 export interface DCAInfo {
@@ -101,12 +102,29 @@ export function useDCA(address: string | undefined) {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
 
+      const parsedDcaAmount = ethers.parseUnits(dcaAmount.toString(), 6);
+
+      const initialFunding =
+        parsedDcaAmount + parsedDcaAmount + parsedDcaAmount;
+      const needsGasToken = true;
+
+      console.log(parsedDcaAmount, initialFunding);
+
+      // Get stablecoin contract
+      const stablecoinContract = new ethers.Contract(
+        stablecoin,
+        ERC20_ABI,
+        signer
+      );
+
+      // 1. Create DCA contract
       const factoryContract = new ethers.Contract(
         DCA_FACTORY_ADDRESS,
         DCA_FACTORY_ABI,
         signer
       );
 
+      console.log("Creating DCA contract...");
       const tx = await factoryContract.createDCA(
         router,
         stablecoin,
@@ -115,8 +133,53 @@ export function useDCA(address: string | undefined) {
         slippageTolerance
       );
 
-      await tx.wait();
+      // Wait for contract creation and get the event
+      const receipt = await tx.wait();
+      const event = receipt?.logs.find(
+        (log: any) => log.eventName === "DCACreated"
+      );
+
+      if (!event) throw new Error("Couldn't find DCA contract address");
+      const newDCAAddress = event.args[1]; // Get the new contract address from event
+
+      console.log("DCA contract created at:", newDCAAddress);
+
+      // 2. Approve stablecoin spending
+      console.log("Approving stablecoin spending...");
+      const approveTx = await stablecoinContract.approve(
+        newDCAAddress,
+        initialFunding // Infinite approval - can be changed to a specific amount if preferred
+      );
+      await approveTx.wait();
+
+      console.log("here");
+
+      // 3. Transfer initial funding
+      console.log("Transferring initial funding...");
+      const transferTx = await stablecoinContract.transfer(
+        newDCAAddress,
+        initialFunding
+      );
+      await transferTx.wait();
+
+      console.log("here2");
+
+      // 4. Optional: Send some cBTC for gas
+      // This depends on your specific needs and chain
+      if (needsGasToken) {
+        console.log("Sending gas token...");
+        const gasTokenAmount = ethers.parseEther("0.05"); // Adjust amount as needed
+        const fundingTx = await signer.sendTransaction({
+          to: newDCAAddress,
+          value: gasTokenAmount,
+        });
+        await fundingTx.wait();
+      }
+
+      console.log("here3");
+
       await loadDCAList();
+      return newDCAAddress;
     } catch (err) {
       console.log(err);
     }
